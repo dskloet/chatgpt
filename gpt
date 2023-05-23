@@ -8,7 +8,9 @@ SYSTEM_INPUT="You are a helpful assistant but your answers are short line you ar
 
 echo "What's your question?"
 
-USER_INPUT="$(cat)"
+if [ -z "${USER_INPUT:-}" ]; then
+  USER_INPUT="$(cat)"
+fi
 
 : Create the request JSON
 
@@ -22,7 +24,7 @@ REQUEST_JSON="$(jq \
     --arg system "$SYSTEM_INPUT" \
     '{model: $model, messages: [{role: "system", content: $system}, {role: "user", content: $input}], temperature: 0, max_tokens: $max_tokens}')"
 
-#echo "Request JSON: $REQUEST_JSON"
+# echo "Request JSON: $(echo "$REQUEST_JSON" | jq .)""
 
 : Send the request:
 
@@ -34,7 +36,14 @@ RESPONSE_JSON="$(curl https://api.openai.com/v1/chat/completions \
   --header "Authorization: Bearer $OPENAI_API_KEY" \
   --data "$REQUEST_JSON")"
 
-#echo "$RESPONSE_JSON" | jq .
+ERROR="$(echo "$RESPONSE_JSON" | jq --raw-output '.error.message')"
+
+if [ "$ERROR" != "null" ]; then
+  echo "ERROR: $RESPONSE_JSON" >&2
+  exit 1
+fi
+
+# echo "Response JSON: $(echo "$RESPONSE_JSON" | jq .)""
 
 : Parse the response
 
