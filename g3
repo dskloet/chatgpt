@@ -1,0 +1,6 @@
+set -euo pipefail
+
+export MAX_TOKENS=500
+export MODEL="gpt-3.5-turbo"
+SOURCE_DIR="$(dirname $0)"
+$SOURCE_DIR/gpt
