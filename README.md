@@ -1,13 +1,14 @@
 # Shell script to use ChatGPT API
 
-1. Get your API key here: https://platform.openai.com/account/api-keys
-2. Create a file called `api-key` with the following content, replacing the key with your own key:
+1. Install `curl` and `jq` if they aren't already installed.
+2. Get your API key here: https://platform.openai.com/account/api-keys
+3. Create a file called `api-key` with the following content, replacing the key with your own key:
 ```
 OPENAI_API_KEY="sk-loremipsumqwoirevkdfjbteuu38rffebwbf2jf34ghjdfvd"
 ```
-3. Run `g3` (for GPT-3.5-turbo) or `g4` (for GPT-4) without any parameters.
-4. Enter your prompt.
-5. Press Ctrl+D
+4. Run `g3` (for GPT-3.5-turbo) or `g4` (for GPT-4) without any parameters.
+5. Enter your prompt.
+6. Press Ctrl+D
 
 Example:
 ````
