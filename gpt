@@ -58,15 +58,12 @@ echo
 
 USAGE_TOKENS="$(echo "$RESPONSE_JSON" | jq '.usage.total_tokens')"
 
-if [ "$MODEL" = "gpt-4" ]; then
-  GPT4_COST_CENTS="$(echo "$RESPONSE_JSON" | jq '.usage | (0.003 * .prompt_tokens) + (0.006 * .completion_tokens)')"
-  printf "GPT-4 cost: %g cents\n" "$GPT4_COST_CENTS"
-fi
+COST_CENTS="$(echo "$RESPONSE_JSON" | jq \
+  --argjson input_cost "$INPUT_TOKEN_COST_CENTS" \
+  --argjson output_cost "$OUTPUT_TOKEN_COST_CENTS" \
+  '.usage | ($input_cost * .prompt_tokens) + ($output_cost * .completion_tokens)')"
 
-if [ "$MODEL" = "gpt-3.5-turbo" ]; then
-  GPT35_COST_CENTS="$(echo "$RESPONSE_JSON" | jq '.usage | (0.0002 * .total_tokens)')"
-  printf "GPT-3.5 cost: %g cents\n" "$GPT35_COST_CENTS"
-fi
+printf "%s cost: %g cents\n" "$MODEL" "$COST_CENTS"
 
 : Log the interaction
 
