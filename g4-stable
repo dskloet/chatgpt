@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+export MAX_TOKENS=500
+export MODEL="gpt-4"
+export INPUT_TOKEN_COST_CENTS="0.003"
+export OUTPUT_TOKEN_COST_CENTS="0.006"
+SOURCE_DIR="$(dirname $0)"
+$SOURCE_DIR/gpt
