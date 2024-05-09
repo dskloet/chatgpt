@@ -1,2 +1,2 @@
 dir="$(dirname $0)"
-scp -P 65002 $dir/*.php dsklnet@dskl.net:www/gpt/
+scp -P 65002 $dir/*.php $dir/*.html $dir/*.js dsklnet@dskl.net:www/gpt/
