@@ -1,5 +1,26 @@
 <?php
-require_once('config.php');
+require_once(__DIR__ . '/config.php');
+require_once(__DIR__ . '/../include/db.php');
+
+function str_starts_with($haystack, $needle) {
+  return substr($haystack, 0, strlen($needle)) === $needle;
+}
+
+function get_budget($api_key) {
+  $db = dbConnect(GPT_DB);
+  $select = dbPrepare(
+      $db, 'select amount from Budgets where api_key = ?');
+  dbBindParams($db, $select, 's', $api_key);
+  dbBindResult($db, $select, $amount);
+  dbExec($db, $select);
+  $success = $select->fetch();
+  $select->close();
+  if (!$success) {
+    return null;
+  }
+
+  return $amount;
+}
 
 $openai_api_url = 'https://api.openai.com/v1/chat/completions';
 
@@ -15,13 +36,25 @@ if (!array_key_exists($auth_header_key, $request_headers)) {
 
 [ $auth_header_key => $auth_header ] = $request_headers;
 
-if ($auth_header == 'Bearer ' . DSKL_API_KEY) {
-  $auth_header = 'Bearer ' .OPENAI_API_KEY;
+$auth_header_prefix = 'Bearer ';
+
+if (str_starts_with($auth_header, $auth_header_prefix)) {
+  $api_key = substr($auth_header, strlen($auth_header_prefix));
+} else {
+  $api_key = null;
+}
+
+if ($api_key !== null) {
+  $budget = get_budget($api_key);
+
+  if ($budget > 0) {
+    $auth_header = 'Bearer ' .OPENAI_API_KEY;
+    $request_headers['Authorization'] = $auth_header;
+  }
 }
 
 $hostname = parse_url($openai_api_url, PHP_URL_HOST);
 
-$request_headers['Authorization'] = $auth_header;
 $request_headers['Host'] = $hostname;
 
 $request_headers_array = array_map(function ($key, $value) {
