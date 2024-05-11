@@ -70,6 +70,7 @@ async function send() {
 v.body(
   div(
     v.classes('page'),
+    div('Model: ', model),
     messages,
     div(
       inputElement,
