@@ -31,7 +31,7 @@ async function askGpt(question) {
     max_tokens: maxTokens,
   };
 
-  const apiUrl = "https://dskl.net/gpt/api.php";
+  const apiUrl = "./api.php";
 
   const response = await fetch(apiUrl, {
     method: 'POST',
