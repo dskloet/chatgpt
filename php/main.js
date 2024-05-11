@@ -12,7 +12,7 @@ const textInput = v.tag('input', (ob) => [inputValue(ob), type('text')]);
 const checkbox = v.tag('input', (ob) => [inputChecked(ob), type('checkbox')]);
 
 const systemPrompt = "You are a helpful assistant but your answers are short like you are a robot. You don't omit useful information but you don't repeat the question and you don't use filler words or pleasantries and you don't try to be polite.";
-const model = 'gpt-3.5-turbo'
+const model = 'gpt-3.5-turbo-0125'
 const maxTokens = 1000;
 
 const apiKey = window.location.hash.substring(1);
