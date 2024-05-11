@@ -53,20 +53,34 @@ async function askGpt(question) {
 window.askGpt = askGpt;
 
 const q = new v.Observable('');
-const answer = new v.Observable('');
+
+const messages = new v.ObservableArray([]);
+
+const inputElement = textInput(q);
 
 async function send() {
-  answer.value = await askGpt(q.value);
+  const question = q.value;
+  q.value = '';
+  messages.push(div(v.classes('question'), question))
+  const answer = await askGpt(question);
+  messages.push(div(v.classes('answer'), answer))
+  inputElement.focus();
 }
 
 v.body(
   div(
-    'Question: ',
-    textInput(q),
-    button(
-      'Send',
-      click(send)
-    )
-  ),
-  div('Answer: ', answer)
+    v.classes('page'),
+    messages,
+    div(
+      inputElement,
+    ),
+    div(
+      button(
+        'Ask',
+        click(send),
+      ),
+    ),
+  )
 );
+
+inputElement.focus();
