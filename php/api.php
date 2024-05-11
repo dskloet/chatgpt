@@ -89,6 +89,20 @@ $post_body = file_get_contents('php://input');
 $post_data = json_decode($post_body, true);
 $model = $post_data['model'];
 
+if ($model === 'test') {
+  $question = $post_data['messages'][1]['content'];
+  $response_data = array();
+  $response_data['choices'] = array(
+    array(
+      'message' => array(
+        'content' => "Test answer to \"$question\"."
+      )
+    )
+  );
+  print(json_encode($response_data));
+  exit();
+}
+
 if (!array_key_exists($model, $input_output_token_cost_in_e8s)) {
   print("Unknown model: $model");
   http_response_code(400);
