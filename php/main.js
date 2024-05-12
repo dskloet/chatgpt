@@ -49,7 +49,11 @@ async function askGpt(question) {
     return data.error.message;
   }
   const answer = data.choices.map(choice => choice.message.content).join('\n');
-  return answer;
+  const cost = data.usage.cost;
+  return {
+    answer,
+    cost,
+  };
 }
 
 window.askGpt = askGpt;
@@ -64,8 +68,16 @@ async function send() {
   const question = q.value;
   q.value = '';
   messages.push(div(v.classes('question'), question))
-  const answer = await askGpt(question);
-  messages.push(div(v.classes('answer'), answer))
+  const { answer, cost } = await askGpt(question);
+  messages.push(div(
+    v.classes('answer'),
+    answer,
+    div(
+      v.classes('cost'),
+      'Cost: ',
+      Math.ceil(cost / 10000),
+    )
+  ));
   inputElement.focus();
 }
 

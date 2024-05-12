@@ -63,6 +63,11 @@ if ($model === 'test') {
       )
     )
   );
+  $response_data['usage'] = array();
+  $response_data['usage']['cost'] = 130000;
+  $response_data['usage']['old_budget'] = 100000000;
+  $response_data['usage']['new_budget'] = 99870000;
+
   print(json_encode($response_data));
   exit();
 }
