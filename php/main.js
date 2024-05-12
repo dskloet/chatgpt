@@ -50,9 +50,11 @@ async function askGpt(question) {
   }
   const answer = data.choices.map(choice => choice.message.content).join('\n');
   const cost = data.usage.cost;
+  const newBudget = data.usage.new_budget;
   return {
     answer,
     cost,
+    newBudget,
   };
 }
 
@@ -69,7 +71,8 @@ async function send() {
   const question = q.value;
   q.value = '';
   messages.push(div(v.classes('question'), question))
-  const { answer, cost } = await askGpt(question);
+  const { answer, cost, newBudget } = await askGpt(question);
+  budget.value = Math.floor(newBudget / 10000);
   messages.push(div(
     v.classes('answer'),
     answer,
