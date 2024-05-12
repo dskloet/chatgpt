@@ -11,6 +11,8 @@ const textInput = v.tag('input', (ob) => [inputValue(ob), type('text')]);
 const textArea = v.tag('textarea', (ob) => [inputValue(ob)]);
 const checkbox = v.tag('input', (ob) => [inputChecked(ob), type('checkbox')]);
 
+const hidden = v.className('hidden');
+
 const systemPrompt = "You are a helpful assistant but your answers are short like you are a robot. You don't omit useful information but you don't repeat the question and you don't use filler words or pleasantries and you don't try to be polite.";
 const models = [
   'gpt-4-turbo-2024-04-09', 
@@ -68,31 +70,38 @@ window.askGpt = askGpt;
 
 const q = new v.Observable('');
 const budget = new v.Observable(0);
+const isSending = new v.Observable(false);
+const isNotSending = isSending.map(v => !v);
 
 const messages = new v.ObservableArray([]);
 
 const inputElement = textArea(q, v.classes('question'));
 q.listen(() => {
   inputElement.style.height = 44;
-  inputElement.style.height = Math.max(inputElement.scrollHeight + 2, 44);
+  inputElement.style.height = Math.max(inputElement.scrollHeight + 4, 44);
 });
-inputElement.style.height = 46;
+inputElement.style.height = 44;
 
 async function send() {
-  const question = q.value;
-  q.value = '';
-  messages.push(div(v.classes('question'), question))
-  const { answer, cost, newBudget } = await askGpt(question);
-  budget.value = Math.floor(newBudget / 10000);
-  messages.push(div(
-    v.classes('answer'),
-    answer,
-    div(
-      v.classes('cost'),
-      'Cost: ',
-      Math.ceil(cost / 10000),
-    )
-  ));
+  isSending.value = true;
+  try {
+    const question = q.value;
+    q.value = '';
+    messages.push(div(v.classes('question'), question))
+    const { answer, cost, newBudget } = await askGpt(question);
+    budget.value = Math.floor(newBudget / 10000);
+    messages.push(div(
+      v.classes('answer'),
+      answer,
+      div(
+        v.classes('cost'),
+        'Cost: ',
+        Math.ceil(cost / 10000),
+      )
+    ));
+  } finally {
+    isSending.value = false;
+  }
   inputElement.focus();
 }
 
@@ -109,6 +118,7 @@ async function loadBudget() {
   budget.value = Math.floor(b / 10000);
 }
 
+
 v.body(
   div(
     v.classes('page'),
@@ -122,7 +132,13 @@ v.body(
     div('Budget: ', budget),
     messages,
     div(
+      hidden(isSending),
       inputElement,
+    ),
+    div(
+      hidden(isNotSending),
+      v.classes('answer'),
+      'Thinking...',
     ),
     div(
       button(
