@@ -71,11 +71,12 @@ const budget = new v.Observable(0);
 
 const messages = new v.ObservableArray([]);
 
-const inputElement = textArea(q);
+const inputElement = textArea(q, v.classes('question'));
 q.listen(() => {
-  inputElement.style.height = 'auto';
-  inputElement.style.height = Math.max(inputElement.scrollHeight + 2, 54);
+  inputElement.style.height = 44;
+  inputElement.style.height = Math.max(inputElement.scrollHeight + 2, 44);
 });
+inputElement.style.height = 46;
 
 async function send() {
   const question = q.value;
