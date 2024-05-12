@@ -8,6 +8,7 @@ const { type, value } = v.attributes;
 
 const { div, button, select, option } = v.tags;
 const textInput = v.tag('input', (ob) => [inputValue(ob), type('text')]);
+const textArea = v.tag('textarea', (ob) => [inputValue(ob)]);
 const checkbox = v.tag('input', (ob) => [inputChecked(ob), type('checkbox')]);
 
 const systemPrompt = "You are a helpful assistant but your answers are short like you are a robot. You don't omit useful information but you don't repeat the question and you don't use filler words or pleasantries and you don't try to be polite.";
@@ -67,7 +68,11 @@ const budget = new v.Observable(0);
 
 const messages = new v.ObservableArray([]);
 
-const inputElement = textInput(q);
+const inputElement = textArea(q);
+q.listen(() => {
+  inputElement.style.height = 'auto';
+  inputElement.style.height = Math.max(inputElement.scrollHeight + 2, 54);
+});
 
 async function send() {
   const question = q.value;
