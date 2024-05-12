@@ -4,7 +4,7 @@ const click = v.event('click');
 const inputEvent = v.event('input');
 const inputValue = v.eventProperty('input', 'value');
 
-const { type, value } = v.attributes;
+const { type, value, selected } = v.attributes;
 
 const { div, button, select, option } = v.tags;
 const textInput = v.tag('input', (ob) => [inputValue(ob), type('text')]);
@@ -17,7 +17,10 @@ const models = [
   'gpt-3.5-turbo-0125',
   'test',
 ];
-const model = new v.Observable(models[0]);
+const model = new v.Observable(localStorage.gptModel || models[0]);
+model.listen((v) => {
+  localStorage.gptModel = v;
+});
 const maxTokens = 1000;
 
 const apiKey = window.location.hash.substring(1);
@@ -112,7 +115,7 @@ v.body(
       'Model: ',
       select(
         inputValue(model),
-        models.map(m => option(value(m), m)),
+        models.map(m => option(m, value(m), selected(m === model.value))),
       ),
     ),
     div('Budget: ', budget),
