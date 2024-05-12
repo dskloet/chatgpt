@@ -79,7 +79,7 @@ $budgets = get_budgets();
 <?php
 foreach ($budgets as ['api_key' => $api_key, 'amount' => $amount]) {
 ?>
-      <tr><td><?=$api_key?></td><td><?=$amount?></td></tr>
+      <tr><td><a href="https://dskl.net/gpt/#<?=$api_key?>"><?=substr($api_key, 0, 12)?></a></td><td><?=$amount?></td></tr>
 <?php
 }
 ?>
