@@ -59,6 +59,7 @@ async function askGpt(question) {
 window.askGpt = askGpt;
 
 const q = new v.Observable('');
+const budget = new v.Observable(0);
 
 const messages = new v.ObservableArray([]);
 
@@ -81,10 +82,24 @@ async function send() {
   inputElement.focus();
 }
 
+async function loadBudget() {
+  const budgetUrl = "./get_budget.php";
+  const response = await fetch(budgetUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+  });
+  const b = await response.json();
+  budget.value = Math.floor(b / 10000);
+}
+
 v.body(
   div(
     v.classes('page'),
     div('Model: ', model),
+    div('Budget: ', budget),
     messages,
     div(
       inputElement,
@@ -98,4 +113,5 @@ v.body(
   )
 );
 
+loadBudget();
 inputElement.focus();
