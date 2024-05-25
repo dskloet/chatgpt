@@ -25,10 +25,17 @@ model.listen((v) => {
 });
 const maxTokens = 1000;
 
-const apiKey = window.location.hash.substring(1);
+if (window.location.hash.length > 1) {
+  localStorage.apiKey = window.location.hash.substring(1);
+  window.location.hash = '';
+}
+
+function getApiKey() {
+  return localStorage.apiKey;
+}
 
 async function askGpt(question) {
-  if (!apiKey) {
+  if (!getApiKey()) {
     return "apiKey is missing";
   }
   const requestData = {
@@ -47,7 +54,7 @@ async function askGpt(question) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
+      'Authorization': `Bearer ${getApiKey()}`
     },
     body: JSON.stringify(requestData)
   });
@@ -111,7 +118,7 @@ async function loadBudget() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
+      'Authorization': `Bearer ${getApiKey()}`
     },
   });
   const b = await response.json();
