@@ -20,6 +20,7 @@ if ($model === 'test') {
   $response_data['choices'] = array(
     array(
       'message' => array(
+        'role' => 'assistant',
         'content' => "This is a test response.\nThe question was: \"$question\"."
       )
     )

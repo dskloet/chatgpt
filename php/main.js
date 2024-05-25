@@ -64,7 +64,7 @@ async function askGpt(question) {
   if (data.error?.message) {
     return data.error.message;
   }
-  const answer = data.choices.map(choice => choice.message.content).join('\n');
+  const answer = data.choices[0].message;
   const cost = data.usage.cost;
   const newBudget = data.usage.new_budget;
   return {
@@ -83,7 +83,7 @@ const isNotSending = isSending.map(v => !v);
 
 const messages = new v.ObservableArray([]);
 
-const inputElement = textArea(q, v.classes('question'));
+const inputElement = textArea(q, v.classes('user'));
 q.listen(() => {
   inputElement.style.height = 44;
   inputElement.style.height = Math.max(inputElement.scrollHeight + 4, 44);
@@ -95,18 +95,16 @@ async function send() {
   try {
     const question = q.value;
     q.value = '';
-    messages.push(div(v.classes('question'), question))
+    messages.push({
+      role: "user",
+      content: question,
+    });
     const { answer, cost, newBudget } = await askGpt(question);
     budget.value = Math.floor(newBudget / 10000);
-    messages.push(div(
-      v.classes('answer'),
-      answer,
-      div(
-        v.classes('cost'),
-        'Cost: ',
-        Math.ceil(cost / 10000),
-      )
-    ));
+    messages.push({
+      ...answer,
+      cost
+    });
   } finally {
     isSending.value = false;
   }
@@ -126,6 +124,17 @@ async function loadBudget() {
   budget.value = Math.floor(b / 10000);
 }
 
+function renderMessage(message, index) {
+  return div(v.classes(message.role), message.content,
+    message.cost ? [
+      div(
+        v.classes('cost'),
+        'Cost: ',
+        Math.ceil(message.cost / 10000),
+      )
+    ] : []
+  );
+}
 
 v.body(
   div(
@@ -138,7 +147,7 @@ v.body(
       ),
     ),
     div('Budget: ', budget),
-    messages,
+    messages.map(renderMessage),
     div(
       hidden(isSending),
       inputElement,
