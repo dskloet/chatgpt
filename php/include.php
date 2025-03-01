@@ -4,7 +4,7 @@ require_once(__DIR__ . '/../include/db.php');
 
 $input_output_token_cost_in_e8s = array(
   'gpt-3.5-turbo-0125' => array(50, 150),
-  'gpt-4o-2024-05-13' => array(500, 1500),
+  'gpt-4o-2024-08-06' => array(250, 1000),
   'gpt-4-turbo-2024-04-09' => array(1000, 3000),
   'gpt-4' => array(3000, 6000),
   'gpt-4-32k' => array(6000, 12000),

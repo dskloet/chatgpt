@@ -15,8 +15,8 @@ const hidden = v.className('hidden');
 
 const systemPrompt = "You are a helpful assistant but your answers are short like you are a robot. You don't omit useful information but you don't repeat the question and you don't use filler words or pleasantries and you don't try to be polite.";
 const models = [
+  'gpt-4o-2024-08-06',
   'gpt-4-turbo-2024-04-09', 
-  'gpt-4o-2024-05-13',
   'gpt-3.5-turbo-0125',
   'test',
 ];
