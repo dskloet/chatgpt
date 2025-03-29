@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+jq \
+    --raw-input \
+    --compact-output \
+    --null-input \
+    --arg model "$MODEL" \
+    --arg input "$USER_INPUT" \
+    --argjson max_tokens "$MAX_TOKENS" \
+    --arg system "$SYSTEM_INPUT" \
+    '{model: $model, system: $system, messages: [{role: "user", content: $input}], temperature: 0, max_tokens: $max_tokens}'

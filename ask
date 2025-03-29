@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+SOURCE_DIR="$(dirname $0)"
+PROVIDER_DIR="$SOURCE_DIR/$API_PROVIDER"
+
+source "$SOURCE_DIR/api-key"
+
+SYSTEM_INPUT="You are a helpful assistant but your answers are short like you are a robot. You don't omit useful information but you don't repeat the question and you don't use filler words or try to be polite. When the context is not clear, it's most likely related to computer programming."
+
+export SYSTEM_INPUT
+
+echo "What's your question?"
+
+if [ -z "${USER_INPUT:-}" ]; then
+  USER_INPUT="$(cat)"
+fi
+
+export USER_INPUT
+
+: Create the request JSON
+
+REQUEST_JSON="$("$PROVIDER_DIR/create-request")"
+export REQUEST_JSON
+
+: Send the request:
+
+echo "Sending request..."
+
+if [[ "${API_URL:-}" == "" ]]; then
+  API_URL="$("$PROVIDER_DIR/get-api-url")"
+fi
+
+export API_URL
+
+RESPONSE_JSON="$("$PROVIDER_DIR/send-request")"
+export RESPONSE_JSON
+
+ERROR="$("$PROVIDER_DIR/get-error")"
+
+if [ "$ERROR" != "null" ]; then
+  echo "ERROR: $RESPONSE_JSON" >&2
+  exit 1
+fi
+
+# echo "Response JSON: $(echo "$RESPONSE_JSON" | jq .)""
+
+: Parse the response
+
+ANSWER="$("$PROVIDER_DIR/get-answer")"
+
+echo "Answer:"
+echo
+echo "$ANSWER"
+echo
+
+USAGE="$("$PROVIDER_DIR/get-usage")"
+
+COST_CENTS="$(echo "$USAGE" | jq \
+  --argjson input_cost "$INPUT_TOKEN_COST_CENTS" \
+  --argjson output_cost "$OUTPUT_TOKEN_COST_CENTS" \
+  '($input_cost * .input_tokens) + ($output_cost * .output_tokens)')"
+
+printf "%s cost: %g cents\n" "$MODEL" "$COST_CENTS"
+
+: Log the interaction
+
+LOG_JSON="$(jq \
+    --raw-input \
+    --compact-output \
+    --null-input \
+    --arg timestamp "$(date +"%Y-%m-%d %H:%M:%S")" \
+    --arg request "$REQUEST_JSON" \
+    --arg response "$RESPONSE_JSON" \
+    '{timestamp: $timestamp, request: $request, response: $response}')"
+
+echo "$LOG_JSON" >> "$SOURCE_DIR/log"

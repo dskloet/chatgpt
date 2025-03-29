@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-export API_PROVIDER=openai
+export API_PROVIDER=anthropic
 
 SOURCE_DIR="$(dirname $0)"
 "$SOURCE_DIR/ask"

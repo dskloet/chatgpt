@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+curl $API_URL \
+  --silent \
+  --header "Content-Type: application/json" \
+  --header "Authorization: Bearer $OPENAI_API_KEY" \
+  --data "$REQUEST_JSON"

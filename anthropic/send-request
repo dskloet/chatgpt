@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+curl $API_URL \
+  --silent \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: $ANTHROPIC_API_KEY" \
+  --header "anthropic-version: 2023-06-01" \
+  --data "$REQUEST_JSON"

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "$RESPONSE_JSON" | jq '.usage | {input_tokens, output_tokens}'
