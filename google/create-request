@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+jq \
+    --raw-input \
+    --compact-output \
+    --null-input \
+    --arg model "$MODEL" \
+    --arg input "$USER_INPUT" \
+    --argjson max_tokens "$MAX_TOKENS" \
+    --arg system "$SYSTEM_INPUT" \ '{
+  "system_instruction": {
+    "parts": [
+      {
+        "text": $system,
+      }
+    ]
+  },
+  "contents": [
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": $input
+        }
+      ]
+    }
+  ],
+  "generationConfig": {
+    "temperature": 0.0,
+    "maxOutputTokens": $max_tokens
+  }
+}'

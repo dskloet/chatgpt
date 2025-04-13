@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "$RESPONSE_JSON" | jq '.usageMetadata | {input_tokens: .promptTokenCount, output_tokens: (.candidatesTokenCount + .thoughtsTokenCount)}'
