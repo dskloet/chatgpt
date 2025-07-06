@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $amount = $_POST['amount'];
 
   $db = dbConnect(GPT_DB);
-  $insert = dbPrepare($db, 'insert into Budgets (api_key, amount) values (?, ?)');
+  $insert = dbPrepare($db, 'INSERT INTO Budgets (api_key, amount) VALUES (?, ?) ON DUPLICATE KEY UPDATE amount = VALUES(amount)');
   dbBindParams($db, $insert, 'si', $api_key, $amount);
   dbExec($db, $insert);
   $insert->close();
