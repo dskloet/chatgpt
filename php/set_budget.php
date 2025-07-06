@@ -70,7 +70,7 @@ $budgets = get_budgets();
 ?>
     <form method="post">
       <table>
-        <tr><td>api-key</td><td><input type="text" name="api-key"></td></tr>
+        <tr><td>api-key</td><td><input type="text" name="api-key" id="api-key"></td></tr>
         <tr><td>amount</td><td><input type="text" name="amount" value="100000000"></td></tr>
       </table>
       <input type="submit">
@@ -79,7 +79,7 @@ $budgets = get_budgets();
 <?php
 foreach ($budgets as ['api_key' => $api_key, 'amount' => $amount]) {
 ?>
-      <tr><td><a href="https://dskl.net/gpt/#<?=$api_key?>"><?=substr($api_key, 0, 12)?></a></td><td><?=$amount?></td></tr>
+      <tr><td><a href="https://dskl.net/gpt/#<?=$api_key?>"><?=substr($api_key, 0, 12)?></a></td><td><?=$amount?></td><td><button onclick="javascript:document.getElementById('api-key').value='<?=$api_key?>'">select</button></td></tr>
 <?php
 }
 ?>
