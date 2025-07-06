@@ -1,2 +1,2 @@
 dir="$(dirname $0)"
-scp -P 65002 $dir/*.php $dir/*.html $dir/*.js dsklnet@dskl.net:www/gpt/
+rsync -avz -e "ssh -p 65002" --no-perms $dir/*.php $dir/*.html $dir/*.js dsklnet@dskl.net:www/gpt
