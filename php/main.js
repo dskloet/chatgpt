@@ -15,6 +15,7 @@ const hidden = v.className('hidden');
 
 const systemPrompt = "You are a helpful assistant but your answers are short like you are a robot. You don't omit useful information but you don't repeat the question and you don't use filler words or pleasantries and you don't try to be polite.";
 const models = [
+  'gpt-5-2025-08-07',
   'gpt-4o-2024-08-06',
   'gpt-4-turbo-2024-04-09', 
   'gpt-3.5-turbo-0125',
@@ -45,8 +46,8 @@ async function askGpt(question) {
       { role: 'system', content: systemPrompt },
       { role: 'user', content: question }
     ],
-    temperature: 0,
-    max_tokens: maxTokens,
+    temperature: 1,
+    max_completion_tokens: maxTokens,
   };
 
   const apiUrl = "./api.php";

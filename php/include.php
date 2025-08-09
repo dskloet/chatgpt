@@ -9,6 +9,8 @@ $input_output_token_cost_in_e8s = array(
   'gpt-4-turbo-2024-04-09' => array(1000, 3000),
   'gpt-4' => array(3000, 6000),
   'gpt-4-32k' => array(6000, 12000),
+  'gpt-5' => array(125, 1000),
+  'gpt-5-2025-08-07' => array(125, 1000),
 );
 
 function str_starts_with($haystack, $needle) {
